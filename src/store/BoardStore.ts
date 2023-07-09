@@ -1,4 +1,4 @@
-import { databases, ID } from '@/appwrite';
+import { databases, ID, storage } from '@/appwrite';
 import { getTodosGroupedByColumn } from '@/lib/getTodosGroupedByColumn';
 import uploadImage from '@/lib/uploadImage';
 import { create } from 'zustand'
@@ -16,13 +16,14 @@ interface BoardState {
     setSearchString: (searchString: string) => void;
 
     addTask: (todo: string, columnId: TypedColumn, image?: File | null) => void;
+    deleteTask: (taskIndex: number, todoId: Todo, id: TypedColumn) => void;
 
     setNewTaskInput: (input: string) => void;
     setNewTaskType: (columnid: TypedColumn) => void;
     setImage: (image: File | null) => void;
 }
 
-export const useBoardStore = create((set) => ({
+export const useBoardStore = create((set, get) => ({
     board: {
         columns: new Map<TypedColumn, Column>()
     },
@@ -39,6 +40,24 @@ export const useBoardStore = create((set) => ({
     },
 
     setBoardState: (board) => set({ board }),
+
+    deleteTask: async (taskIndex: number, todo: Todo, id: TypedColumn) => {
+        const newColumns = new Map(get().board.columns);
+
+        // delete todoId from newColumns
+        newColumns.get(id)?.todos.splice(taskIndex, 1);
+        set({ board: { columns: newColumns } });
+
+        if (todo.image) {
+            await storage.deleteFile(todo.image.bucketId, todo.image.fileId);
+        }
+
+        await databases.deleteDocument(
+            process.env.NEXT_PUBLIC_DATABASE_ID!,
+            process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!,
+            todo.$id
+        )
+    },
 
     setNewTaskInput: (input: string) => set({ newTaskInput: input }),
     setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
