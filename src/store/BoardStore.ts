@@ -23,7 +23,7 @@ interface BoardState {
     setImage: (image: File | null) => void;
 }
 
-export const useBoardStore = create((set, get) => ({
+export const useBoardStore = create<BoardState>((set, get) => ({
     board: {
         columns: new Map<TypedColumn, Column>()
     },
