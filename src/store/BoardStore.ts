@@ -8,7 +8,7 @@ interface BoardState {
     getBoard: () => void;
     setBoardState: (board: Board) => void;
     updateTodoInDB: (todo: Todo, columnId: TypedColumn) => void
-    newtaskInput: string
+    newTaskInput: string
     newTaskType: TypedColumn;
     image: File | null;
 
