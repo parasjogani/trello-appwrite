@@ -3,7 +3,7 @@
 import getUrl from "@/lib/getUrl";
 import { useBoardStore } from "@/store/BoardStore";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
+import NextImage from "next/image";
 import { useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps, DraggableProvidedDraggableProps } from "react-beautiful-dnd"
 
@@ -16,21 +16,26 @@ type Props = {
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
 }
 
-function TodoCard({
+const TodoCard = ({
   todo,
   index,
   id,
   innerRef,
   draggableProps,
   dragHandleProps,
-}: Props) {
+}: Props) => {
   const deleteTask = useBoardStore((state) => state.deleteTask);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (todo.image) {
+      const imageObj: Image = {
+        bucketId: todo.image.bucketId,
+        fileId: todo.image.fileId,
+      };
       const fetchImage = async () => {
-        const url = await getUrl(todo.image);
+        const url = await getUrl(imageObj);
+
         if (url) {
           setImageUrl(url.toString());
         }
@@ -52,7 +57,7 @@ function TodoCard({
 
       {imageUrl && (
         <div className="relative h-full w-full rounded-b-md">
-          <Image
+          <NextImage
             src={imageUrl}
             alt="Task image"
             width={400}
