@@ -44,8 +44,8 @@ function Header() {
 
             <div className="flex items-center justify-center px-5 py-2 md:py-5">
                 <p className="flex items-center text-sm p-5 font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1]">
-                    <UserCircleIcon className="inline-block h-10 w-10 text-[#0055D1] mr-1" />
-                        GPT is summarising your task or the day...
+                    <UserCircleIcon className="inline-block h-6 w-10 text-[#0055D1] mr-1" />
+                        Hello, Welcome To Trello! Enjoy!
                 </p>
             </div>
         </header>
